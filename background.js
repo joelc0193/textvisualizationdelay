@@ -13,6 +13,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
+function countSyllables(word) {
+    word = word.toLowerCase();                                     
+    if(word.length <= 3) { return 1; }                             
+    word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');   
+    word = word.replace(/^y/, '');                                  
+    return word.match(/[aeiouy]{1,2}/g).length;                    
+}
 
 async function readAloud(tabID, text, delay) {
     console.log('in readAloud');
@@ -34,6 +41,8 @@ async function readAloud(tabID, text, delay) {
     }
     console.log('wordIndices: ' + wordIndices);
     console.log('refIndices: ' + refIndices);
+    const syllables = countSyllables(text);
+    console.log('Syllables: ' + syllables);
     chrome.tts.speak(text,
         {
             rate: 1,
